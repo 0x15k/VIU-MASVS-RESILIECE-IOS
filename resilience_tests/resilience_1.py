@@ -58,7 +58,7 @@ def analyze_with_r2(binary_path):
 
     return analysis_output
 
-def main(output_file):
+def main():
     binary_directory = 'resilience_tests/binary'  # Updated directory where the IPA files are located
     extract_base_dir = 'resilience_tests/extracted'  # Base directory to extract the IPA files
 
@@ -71,7 +71,8 @@ def main(output_file):
     # List IPA files in the binary directory
     files = list_files(binary_directory)
     if not files:
-        return "No files found in the binary directory."
+        print("No files found in the binary directory.")
+        return
 
     extracted_dirs = []
     for ipa_file in files:
@@ -83,31 +84,20 @@ def main(output_file):
         extracted_dirs.append(specific_extract_to)
 
     if not extracted_dirs:
-        return "No IPA files were extracted."
+        print("No IPA files were extracted.")
+        return
 
     selected_dir = extracted_dirs[0]  # Analyze the first extracted directory
 
     # Find the binaries
     binaries = find_binaries(selected_dir)
     if not binaries:
-        return f"No binaries found in {selected_dir}."
+        print(f"No binaries found in {selected_dir}.")
+        return
 
-    # Analyze binaries and store output in results
-    results = ""
+    # Analyze binaries and print output
     for binary_path in binaries:
-        results += analyze_with_r2(binary_path)
-
-    # Ensure the results directory exists
-    results_dir = os.path.dirname(output_file)
-    if not os.path.exists(results_dir):
-        os.makedirs(results_dir)
-
-    # Save results to file
-    with open(output_file, 'w') as f:
-        f.write(results)
-
-    return f"Analysis results saved to {output_file}."
+        print(analyze_with_r2(binary_path))
 
 if __name__ == '__main__':
-    output_file = 'resilience_tests/results/analysis_results.txt'  # Path to save the analysis results
-    print(main(output_file))
+    main()

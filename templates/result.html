@@ -1,11 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Analysis Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Vulnerabilidades</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Analysis Result for {{ filename }}</h1>
-    <pre>{{ result }}</pre>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="{{ url_for('index') }}">Inicio</a>
+                <a href="#">API</a>
+                <a href="#">Acerca de</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <h1>Reporte de Vulnerabilidades para {{ filename }}</h1>
+            <div class="report">
+                {{ report|safe }}
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mobile Application Security Verification Standard - MASVS v1.0</p>
+        </div>
+    </footer>
 </body>
 </html>

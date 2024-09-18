@@ -3,16 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir y Analizar Archivo</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>MASVS</title>
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
-    <h1>Subir Archivo IPA o APK</h1>
-    
-    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".ipa,.apk">
-        <button type="submit">Subir</button>
-    </form>
+    <header>
+        <div class="container">
+            <nav aria-label="Main navigation">
+                <a href="#" aria-label="Static Analyzer">Static Analyzer</a>
+                <a href="#" aria-label="Dynamic Analyzer">Dynamic Analyzer</a>
+            </nav>
+        </div>
+    </header>
 
+    <main>
+        <section class="container">
+            <div class="upload">
+                <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                    <label for="file">Elija un archivo IPA o APK para subir:</label>
+                    <input type="file" id="file" name="file" accept=".ipa,.apk" hidden>
+                    <button type="button" id="uploadBtn">Analizar</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="container">
+            <h2>Reportes</h2>
+            <ul aria-live="polite">
+                {% for file in files %}
+                    <li><a href="{{ url_for('view_report', filename=file) }}">{{ file }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>©2024 MASVS Resilience Test Tool v1.0 - Yamil La Barrera</p>
+        </div>
+    </footer>
+    <script src="static/script.js"></script>
 </body>
 </html>
