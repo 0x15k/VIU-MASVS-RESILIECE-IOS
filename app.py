@@ -1,8 +1,8 @@
+from flask import Flask, render_template, request, redirect, url_for, send_file
+from werkzeug.utils import secure_filename
 import os
 import sys
 import subprocess
-from flask import Flask, render_template, request, redirect, url_for, send_file
-from werkzeug.utils import secure_filename
 import pdfkit
 
 # Añadir el directorio 'resilience_tests' al PYTHONPATH
@@ -127,9 +127,9 @@ def convert_html_to_pdf(html_content, filename):
     """Convierte el contenido HTML a un archivo PDF."""
     pdf_report_path = os.path.join(app.config['RESULTS_FOLDER'], f'{filename}.pdf')
     # Especifica la ruta completa al ejecutable wkhtmltopdf
-    config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+    config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
     pdfkit.from_string(html_content, pdf_report_path, configuration=config)
     return pdf_report_path
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
