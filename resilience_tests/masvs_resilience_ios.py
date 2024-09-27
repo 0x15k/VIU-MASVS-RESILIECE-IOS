@@ -143,27 +143,21 @@ def test_debugging_code(binary_path):
     return analysis_output, passed
 
 @masvs_test
-def test_debugging_symbols(r2):
-    """Prueba de detección de símbolos de depuración."""
+def test_debugging_code(binary_path):
+    """Prueba de código de depuración y registro de errores verbosos."""
     analysis_output = ""
     passed = 0
-    
-    # Verifica símbolos relacionados con "debug" usando is~+debug
-    output = r2.cmd('is~+debug')
-    if "Debug" in output or "debug" in output:
-        analysis_output += f"Radare2 encontró símbolos relacionados con 'Debug':\n{output}\n"
-    else:
-        passed += 1
-    
-    # Verifica cadenas relacionadas con "debug" usando iz~+debug
-    output = r2.cmd('iz~+debug')
-    if "Debug" in output or "debug" in output:
-        analysis_output += f"Radare2 encontró cadenas relacionadas con 'Debug':\n{output}\n"
-    else:
-        passed += 1
-    
-    if passed == 2:
-        analysis_output += "Radare2 NO encontró ningún símbolo ni cadena relacionada con 'Debug'.\n"
+    try:
+        # Ejecuta ldid directamente ya que está en el PATH
+        result = subprocess.run(['ldid', '-e', binary_path], capture_output=True, text=True)
+        if result.stderr:
+            analysis_output += f"Errores de ldid:\n{result.stderr}\n"
+        
+        # Procesar la salida de ldid...
+        # (Resto del código sigue igual)
+
+    except Exception as e:
+        analysis_output += f"Ocurrió un error al ejecutar ldid en {binary_path}: {e}\n"
     
     return analysis_output, passed
 
@@ -174,17 +168,10 @@ def analyze_with_r2(binary_path):
     """Analiza el binario con radare2 usando r2pipe."""
     global passed_subtests
     analysis_results = {}
-    # Número total de pruebas y subpruebas (comentarios informativos)
-    # total_tests = 4
-    # total_subtests = 6
     passed_subtests = 0  # Reinicia el contador de subpruebas pasadas
 
     try:
-        # Ajusta PATH para incluir el directorio con r2r.exe
-        radare2_dir = os.path.join('tools', 'radare', 'bin')
-        os.environ['PATH'] = radare2_dir + os.pathsep + os.environ['PATH']
-        
-        # Abre el binario con r2pipe
+        # Abre el binario con r2pipe directamente
         r2 = r2pipe.open(binary_path)
         
         # Ejecuta comandos de radare2
