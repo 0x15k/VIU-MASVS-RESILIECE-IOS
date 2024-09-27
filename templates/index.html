@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MASVS</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
@@ -19,7 +19,7 @@
     <main>
         <section class="container">
             <div class="upload">
-                <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                <form id="uploadForm" action="/run_test/masvs_resilience_ios.py" method="post" enctype="multipart/form-data">
                     <label for="file">Elija un archivo IPA o APK para subir:</label>
                     <input type="file" id="file" name="file" accept=".ipa,.apk" hidden>
                     <button type="button" id="uploadBtn">Analizar</button>
@@ -28,10 +28,35 @@
         </section>
 
         <section class="container">
-            <h2>Reportes</h2>
+            <h2>Estado del Dispositivo</h2>
+            <p>
+                {% if device_connected %}
+                    Dispositivo conectado.
+                {% else %}
+                    No hay dispositivos conectados.
+                {% endif %}
+            </p>
+        </section>
+
+        <section class="container">
+            <h2>Aplicaciones Identificadas</h2>
+            <ul aria-live="polite">
+                {% for name, identifier in apps %}
+                    <li>{{ name }} ({{ identifier }})</li>
+                {% endfor %}
+            </ul>
+            <form action="/run_dynamic_analysis" method="post">
+                <label for="identifier">Ingrese el identificador de la aplicación:</label>
+                <input type="text" id="identifier" name="identifier" required>
+                <button type="submit">Ejecutar Análisis Dinámico</button>
+            </form>
+        </section>
+
+        <section class="container">
+            <h2>Reportes analizados</h2>
             <ul aria-live="polite">
                 {% for file in files %}
-                    <li><a href="{{ url_for('view_report', filename=file) }}">{{ file }}</a></li>
+                    <li><a href="{{ url_for('routes.view_report', filename=file) }}" target="_blank">{{ file }}</a></li>
                 {% endfor %}
             </ul>
         </section>
@@ -42,6 +67,6 @@
             <p>©2024 MASVS Resilience Test Tool v1.0 - Yamil La Barrera</p>
         </div>
     </footer>
-    <script src="static/script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

@@ -7,12 +7,13 @@ WORKDIR /app
 # Copia los archivos de tu proyecto al contenedor
 COPY . /app
 
-# Instala las dependencias necesarias
-RUN pip install --no-cache-dir -r requirements.txt
+# Instala las dependencias necesarias y frida-tools
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install frida-tools
 
-# Instala wkhtmltopdf y otras dependencias necesarias
+# Instala radare2
 RUN apt-get update && apt-get install -y \
-    wkhtmltopdf \
+    radare2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
