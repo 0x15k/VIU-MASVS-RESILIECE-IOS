@@ -105,8 +105,15 @@ def test_debugging_code(binary_path):
     analysis_output = ""
     passed = 0
     try:
+        # Detecta el sistema operativo
+        if os.name == 'nt':
+            # Windows
+            ldid_path = os.path.join('tools', 'ldid.exe')
+        else:
+            # Linux
+            ldid_path = os.path.join('tools', 'ldid')
+        
         # Ejecuta la herramienta ldid para verificar código de depuración y registro de errores verbosos
-        ldid_path = os.path.join('tools', 'ldid.exe')
         result = subprocess.run([ldid_path, '-e', binary_path], capture_output=True, text=True)
         if result.stderr:
             analysis_output += f"Errores de ldid:\n{result.stderr}\n"
@@ -170,18 +177,38 @@ def test_debugging_symbols(r2):
 # Variables globales para acumulación
 passed_subtests = 0
 
+def calculate_compliance_percentage(passed_subtests):
+    """Calcula el porcentaje de cumplimiento basado en las subpruebas pasadas."""
+    # Pesos de cada subprueba
+    weights = {
+        1: 12.5,
+        2: 12.5,
+        3: 25,
+        4: 25,
+        5: 12.5,
+        6: 12.5
+    }
+
+    # Suma de los pesos de las subpruebas pasadas
+    suma = sum(weight for i, weight in weights.items() if passed_subtests >= i)
+    return suma
+
 def analyze_with_r2(binary_path):
     """Analiza el binario con radare2 usando r2pipe."""
     global passed_subtests
     analysis_results = {}
-    # Número total de pruebas y subpruebas (comentarios informativos)
-    # total_tests = 4
-    # total_subtests = 6
     passed_subtests = 0  # Reinicia el contador de subpruebas pasadas
 
     try:
+        # Detecta el sistema operativo
+        if os.name == 'nt':
+            # Windows
+            radare2_dir = os.path.join('tools', 'radare', 'bin')
+        else:
+            # Linux
+            radare2_dir = os.path.join('tools', 'radare2', 'bin')
+        
         # Ajusta PATH para incluir el directorio con r2r.exe
-        radare2_dir = os.path.join('tools', 'radare', 'bin')
         os.environ['PATH'] = radare2_dir + os.pathsep + os.environ['PATH']
         
         # Abre el binario con r2pipe
@@ -210,23 +237,7 @@ def analyze_with_r2(binary_path):
         analysis_results['error'] = f"Ocurrió un error inesperado con {binary_path}: {e}\n"
 
     # Calcular el porcentaje de cumplimiento
-    # Pesos de cada subprueba
-    test_1_1 = 12.5
-    test_1_2 = 12.5
-    test_2 = 25
-    test_3 = 25
-    test_4_1 = 12.5
-    test_4_2 = 12.5
-
-    # Suma de los pesos de las subpruebas pasadas
-    suma = (test_1_1 if passed_subtests >= 1 else 0) + \
-           (test_1_2 if passed_subtests >= 2 else 0) + \
-           (test_2 if passed_subtests >= 3 else 0) + \
-           (test_3 if passed_subtests >= 4 else 0) + \
-           (test_4_1 if passed_subtests >= 5 else 0) + \
-           (test_4_2 if passed_subtests >= 6 else 0)
-
-    compliance_percentage = suma
+    compliance_percentage = calculate_compliance_percentage(passed_subtests)
     analysis_results['compliance_percentage'] = compliance_percentage
 
     return analysis_results
