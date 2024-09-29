@@ -10,8 +10,8 @@
     <header>
         <div class="container">
             <nav aria-label="Main navigation">
-                <a href="#" aria-label="Static Analyzer">Static Analyzer</a>
-                <a href="#" aria-label="Dynamic Analyzer">Dynamic Analyzer</a>
+                <a href="{{ url_for('routes.index') }}" aria-label="Static Analyzer">Static Analyzer</a>
+                <a href="{{ url_for('routes.dynamic_analyzer') }}" aria-label="Dynamic Analyzer">Dynamic Analyzer</a>
             </nav>
         </div>
     </header>
@@ -28,38 +28,12 @@
         </section>
 
         <section class="container">
-            <h2>Estado del Dispositivo</h2>
-            <p>
-                {% if device_connected %}
-                    Dispositivo conectado.
-                {% else %}
-                    No hay dispositivos conectados.
-                {% endif %}
-            </p>
-        </section>
-
-        <section class="container">
-            <h2>Aplicaciones Identificadas</h2>
+            <h2>Reportes Estáticos Analizados</h2>
             <ul aria-live="polite">
-                {% for name, identifier in apps %}
-                    <li>{{ name }} ({{ identifier }})</li>
+                {% for file in static_reports %}
+                    <li><a href="{{ url_for('routes.view_report', filename='static/' ~ file) }}" target="_blank">{{ file | e }}</a></li>
                 {% endfor %}
             </ul>
-            <form action="/run_dynamic_analysis" method="post">
-                <label for="identifier">Ingrese el identificador de la aplicación:</label>
-                <input type="text" id="identifier" name="identifier" required>
-                <button type="submit">Ejecutar Análisis Dinámico</button>
-            </form>
-        </section>
-
-        <section class="container">
-            <h2>Reportes analizados</h2>
-            <ul aria-live="polite">
-                {% for file in files %}
-                    <li><a href="{{ url_for('routes.view_report', filename=file) }}" target="_blank">{{ file }}</a></li>
-                {% endfor %}
-            </ul>
-        </section>
     </main>
 
     <footer>

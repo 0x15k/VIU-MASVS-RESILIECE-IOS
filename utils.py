@@ -1,14 +1,17 @@
 from werkzeug.utils import secure_filename
 import os
+from flask import url_for  # Asegúrate de importar url_for en routes.py
 
 def allowed_file(filename, allowed_extensions):
     """Check if the file has an allowed extension."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
-def save_html_report(html_content, filename, results_folder):
+def save_html_report(html_content, filename, results_folder, report_type):
     """Save HTML content to a file."""
     valid_filename = secure_filename(filename)
-    html_report_path = os.path.join(results_folder, f'{valid_filename}.html')
+    report_folder = os.path.join(results_folder, report_type)
+    os.makedirs(report_folder, exist_ok=True)
+    html_report_path = os.path.join(report_folder, f'{valid_filename}.html')
     
     with open(html_report_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
@@ -69,6 +72,38 @@ def generate_html_report(filename, analysis_results, url_for):
             if line.strip() and "Detectando dispositivos iOS" not in line and "No se encontraron dispositivos iOS" not in line:
                 formatted_report += f'<p class="wrapped-text">{line}</p>'
         formatted_report += "</div></div>"
+
+    formatted_report += """
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    return formatted_report
+
+def generate_dynamic_analysis_report(identifier, dynamic_analysis_results, url_for):
+    """Generate a dynamic analysis report in HTML format."""
+    clean_identifier = identifier.replace('|', '')
+    formatted_report = f"""
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Dynamic Analysis Report for {clean_identifier}</title>
+        <link rel="stylesheet" href="{url_for('static', filename='report_style.css', _external=True)}">
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1 class="htext">Dynamic Analysis Report for {clean_identifier}</h1>
+            </div>
+            <div class="report-section">
+                <h2>Analysis Results</h2>
+    """
+
+    for line in dynamic_analysis_results.split('\n'):
+        if line.strip():
+            formatted_report += f'<p class="wrapped-text">{line}</p>'
 
     formatted_report += """
             </div>

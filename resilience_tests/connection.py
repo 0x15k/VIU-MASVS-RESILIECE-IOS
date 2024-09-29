@@ -1,5 +1,6 @@
 import frida
 import socket
+import argparse
 
 def is_ssh_tunnel_active(host='127.0.0.1', port=27042):
     """Verifica si el túnel SSH está activo intentando conectarse al puerto local redirigido."""
@@ -38,7 +39,9 @@ def detect_ios_devices():
         if ssh_connected:
             device_list += "Dispositivo(s) iOS conectados remotamente (túnel SSH):\n"
             for device in remote_devices:
-                device_list += f"ID: {device.id}, Nombre: {device.name}\n"
+                # Verificar si el nombre del dispositivo está disponible
+                device_name = device.name if device.name else "Nombre no disponible"
+                device_list += f"ID: {device.id}, Nombre: {device_name}\n"
         
         return device_list, usb_devices, remote_devices if ssh_connected else []
     except Exception as e:
@@ -47,7 +50,7 @@ def detect_ios_devices():
         return "Ocurrió un error al intentar detectar dispositivos iOS.", [], []
 
 def list_ios_processes(device):
-    """Lista los nombres de las aplicaciones identificadas en el dispositivo iOS conectado, excluyendo las nativas de Apple."""
+    """Lista los identificadores de las aplicaciones en el dispositivo iOS conectado, excluyendo las nativas de Apple."""
     try:
         # Obtiene la lista de aplicaciones en el dispositivo
         processes = device.enumerate_applications()
@@ -57,8 +60,8 @@ def list_ios_processes(device):
         else:
             # Filtra las aplicaciones que no son nativas de Apple
             non_native_apps = [process for process in processes if not process.identifier.startswith("com.apple.")]
-            app_names = [process.name for process in non_native_apps]
-            return f"Aplicaciones en el dispositivo iOS:\n" + "\n".join(app_names)
+            app_identifiers = [process.identifier for process in non_native_apps]
+            return f"Identificadores de aplicaciones en el dispositivo iOS:\n" + "\n".join(app_identifiers)
     except frida.TransportError as e:
         # Maneja errores de transporte (conexión)
         return f"Failed to enumerate applications: {e}"
@@ -68,24 +71,38 @@ def list_ios_processes(device):
 
 def main():
     """Función principal para detectar dispositivos y listar aplicaciones."""
+    parser = argparse.ArgumentParser(description="Detectar dispositivos iOS y listar aplicaciones.")
+    parser.add_argument('-v', '--verbose', action='store_true', help="Mostrar detalles de los dispositivos conectados.")
+    parser.add_argument('-ps', '--processes', action='store_true', help="Listar los identificadores de las aplicaciones en el dispositivo iOS.")
+    args = parser.parse_args()
+
     output, usb_devices, remote_devices = detect_ios_devices()
-    print(output)
-    
-    # Lista las aplicaciones en el primer dispositivo de cada tipo si se encontraron dispositivos
-    if usb_devices:
-        print("Aplicaciones en el primer dispositivo iOS conectado por USB:")
-        process_output = list_ios_processes(usb_devices[0])
-        print(process_output)
-    
-    if remote_devices:
-        try:
-            print("Aplicaciones en el primer dispositivo iOS conectado remotamente (túnel SSH):")
-            process_output = list_ios_processes(remote_devices[0])
+
+    # Mostrar siempre el estado de los dispositivos conectados
+    if usb_devices or remote_devices:
+        print("Dispositivo(s) iOS conectado(s).")
+    else:
+        print("No se encontraron dispositivos iOS conectados.")
+
+    # Mostrar device_list solo si se usa el parámetro -v
+    if args.verbose:
+        print(output)
+
+    if args.processes:
+        if usb_devices:
+            print("Aplicaciones en el primer dispositivo iOS conectado por USB:")
+            process_output = list_ios_processes(usb_devices[0])
             print(process_output)
-        except frida.TransportError as e:
-            print(f"Failed to enumerate applications: {e}")
-        except Exception as e:
-            print(f"Ocurrió un error al intentar listar aplicaciones en el dispositivo iOS: {e}")
+        
+        if remote_devices:
+            try:
+                print("Aplicaciones en el primer dispositivo iOS conectado remotamente (túnel SSH):")
+                process_output = list_ios_processes(remote_devices[0])
+                print(process_output)
+            except frida.TransportError as e:
+                print(f"Failed to enumerate applications: {e}")
+            except Exception as e:
+                print(f"Ocurrió un error al intentar listar aplicaciones en el dispositivo iOS: {e}")
 
 if __name__ == "__main__":
     main()

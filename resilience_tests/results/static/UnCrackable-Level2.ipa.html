@@ -1,0 +1,45 @@
+
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>MASVS Test Report for UnCrackable-Level2.ipa</title>
+        <link rel="stylesheet" href="http://192.168.18.39:5000/static/report_style.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1 class="htext">MASVS Test Report for UnCrackable-Level2.ipa</h1>
+            </div>
+            <div class="report-section">
+                <h2>Analysis Results</h2>
+                <div class="percentage-ring">
+                    <div class="circle" style="background-color: rgb(63,191,0);">
+                        <div class="mask full" style="transform: rotate(135.0deg);"></div>
+                        <div class="mask half">
+                            <div class="fill" style="transform: rotate(135.0deg);"></div>
+                        </div>
+                        <div class="inside-circle">75.00%</div>
+                    </div>
+                </div>
+    
+                <div class="test-result">
+                    <h3 class="wrapped-text">Test Jailbreak Detection</h3>
+                    <div class="wrapped-text">
+        <p class="wrapped-text">Radare2 encontró cadenas relacionada con 'Jailbreak':</p><p class="wrapped-text">19  0x00009cf7 0x0000dcf7 18  19   3.__TEXT.__objc_methname  ascii showJailbreakAlert</p><p class="wrapped-text">173 0x0000ada7 0x0000eda7 19  20   4.__TEXT.__cstring        ascii Jailbreak Detected!</p><p class="wrapped-text">174 0x0000adbb 0x0000edbb 51  52   4.__TEXT.__cstring        ascii This function is unavailable on jailbroken devices.</p><p class="wrapped-text">173 0x000101b8 0x000101b8 19  20                             ascii cstr.Jailbreak Detected!</p><p class="wrapped-text">174 0x000101c8 0x000101c8 51  52                             ascii cstr.This function is unavailable on jailbroken devices.</p></div></div>
+                <div class="test-result">
+                    <h3 class="wrapped-text">Test App Signed</h3>
+                    <div class="wrapped-text">
+        <p class="wrapped-text">El IPA está firmado correctamente. Se encontraron todos los archivos y directorios necesarios.</p></div></div>
+                <div class="test-result">
+                    <h3 class="wrapped-text">Test Debugging Code</h3>
+                    <div class="wrapped-text">
+        <p class="wrapped-text">La opción 'get-task-allow' puede NO estar presente o está configurada como 'false' en el binario.</p></div></div>
+                <div class="test-result">
+                    <h3 class="wrapped-text">Test Debugging Symbols</h3>
+                    <div class="wrapped-text">
+        <p class="wrapped-text">Radare2 encontró cadenas relacionadas con 'Debug':</p><p class="wrapped-text">100 0x0000a781 0x0000e781 16  17   3.__TEXT.__objc_methname  ascii debugDescription</p><p class="wrapped-text">180 0x0000ae40 0x0000ee40 79  80   4.__TEXT.__cstring        ascii /Users/berndt/Projects/uncrackable_app/iOS/Level2/UnDebuggable/ViewController.m</p><p class="wrapped-text">210 0x0000b0a0 0x0000f0a0 16  17   4.__TEXT.__cstring        ascii debugDescription</p></div></div>
+            </div>
+        </div>
+    </body>
+    </html>
+    

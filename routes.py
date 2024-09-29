@@ -6,7 +6,7 @@ import subprocess
 import json
 import time
 from config import UPLOAD_FOLDER, RESULTS_FOLDER, ALLOWED_EXTENSIONS
-from utils import allowed_file, save_html_report, generate_html_report
+from utils import allowed_file, save_html_report, generate_html_report, generate_dynamic_analysis_report
 
 # Add 'resilience_tests' directory to PYTHONPATH
 sys.path.append(os.path.join(os.path.dirname(__file__), 'resilience_tests'))
@@ -15,10 +15,15 @@ from connection import detect_ios_devices
 
 routes = Blueprint('routes', __name__)
 
+# Crear subcarpetas 'static' y 'dynamic' si no existen
+os.makedirs(os.path.join(RESULTS_FOLDER, 'static'), exist_ok=True)
+os.makedirs(os.path.join(RESULTS_FOLDER, 'dynamic'), exist_ok=True)
+
 @routes.route('/')
 def index():
     """Main page listing generated reports and showing device status."""
-    generated_reports = [f for f in os.listdir(RESULTS_FOLDER) if f.endswith('.html')]
+    static_reports = [f for f in os.listdir(os.path.join(RESULTS_FOLDER, 'static')) if f.endswith('.html')]
+    dynamic_reports = [f for f in os.listdir(os.path.join(RESULTS_FOLDER, 'dynamic')) if f.endswith('.html')]
     
     # Detect connected iOS devices
     output, usb_devices, remote_devices = detect_ios_devices()
@@ -31,7 +36,25 @@ def index():
     elif remote_devices:
         apps = [(process.name, process.identifier) for process in remote_devices[0].enumerate_applications() if not process.identifier.startswith("com.apple.")]
     
-    return render_template('index.html', files=generated_reports, device_connected=device_connected, apps=apps)
+    return render_template('index.html', static_reports=static_reports, dynamic_reports=dynamic_reports, device_connected=device_connected, apps=apps)
+
+@routes.route('/dynamic_analyzer')
+def dynamic_analyzer():
+    """Page for dynamic analysis."""
+    dynamic_reports = [f for f in os.listdir(os.path.join(RESULTS_FOLDER, 'dynamic')) if f.endswith('.html')]
+    
+    # Detect connected iOS devices
+    output, usb_devices, remote_devices = detect_ios_devices()
+    device_connected = bool(usb_devices or remote_devices)
+    
+    # Get names and identifiers of non-Apple native apps
+    apps = []
+    if usb_devices:
+        apps = [(process.name, process.identifier) for process in usb_devices[0].enumerate_applications() if not process.identifier.startswith("com.apple.")]
+    elif remote_devices:
+        apps = [(process.name, process.identifier) for process in remote_devices[0].enumerate_applications() if not process.identifier.startswith("com.apple.")]
+    
+    return render_template('dynamic_analyzer.html', dynamic_reports=dynamic_reports, device_connected=device_connected, apps=apps)
 
 @routes.route('/run_dynamic_analysis', methods=['POST'])
 def run_dynamic_analysis():
@@ -39,6 +62,22 @@ def run_dynamic_analysis():
     identifier = request.form.get('identifier')
     if not identifier:
         return "No identifier provided", 400
+
+    # Detect connected iOS devices
+    output, usb_devices, remote_devices = detect_ios_devices()
+    device_connected = bool(usb_devices or remote_devices)
+    
+    # Get names and identifiers of non-Apple native apps
+    apps = []
+    if usb_devices:
+        apps = [(process.name, process.identifier) for process in usb_devices[0].enumerate_applications() if not process.identifier.startswith("com.apple.")]
+    elif remote_devices:
+        apps = [(process.name, process.identifier) for process in remote_devices[0].enumerate_applications() if not process.identifier.startswith("com.apple.")]
+
+    # Validar que el identificador esté en la lista de aplicaciones identificadas
+    valid_identifiers = [app[1] for app in apps]  # Lista de identificadores válidos
+    if identifier not in valid_identifiers:
+        return "Invalid identifier provided", 400
 
     script_path = os.path.join('resilience_tests', 'ios_dynamic_analysis.py')
 
@@ -53,13 +92,12 @@ def run_dynamic_analysis():
         return error_message, 500
 
     # Generate HTML report
-    html_report = generate_html_report(identifier, {}, dynamic_analysis_results, url_for)
+    html_report = generate_dynamic_analysis_report(identifier, dynamic_analysis_results, url_for)
 
     # Save HTML report to a file
-    html_report_path = save_html_report(html_report, identifier, RESULTS_FOLDER)
-
-    # Return a success message or redirect to another page
-    return "Dynamic analysis completed successfully"
+    html_report_path = save_html_report(html_report, identifier, RESULTS_FOLDER, 'dynamic')
+ 
+    return "", 204
 
 @routes.route('/upload', methods=['POST'])
 def upload_file():
@@ -76,24 +114,22 @@ def upload_file():
         return redirect(url_for('routes.index'))
     return redirect(request.url)
 
-@routes.route('/view_report/<filename>')
+@routes.route('/view_report/<path:filename>')
 def view_report(filename):
     """Display the uploaded file report."""
     report_path = os.path.join(RESULTS_FOLDER, filename)
     if os.path.exists(report_path):
         return send_file(report_path, as_attachment=False)
-    else:
-        return "Report not found", 404
+    return "Report not found", 404
 
 @routes.route('/run_test/masvs_resilience_ios.py', methods=['POST'])
 def run_test():
     """Run the specified test script."""
     if 'file' not in request.files:
         return "", 204
+    
     file = request.files['file']
-    if file.filename == '':
-        return "", 204
-    if not allowed_file(file.filename, ALLOWED_EXTENSIONS):
+    if file.filename == '' or not allowed_file(file.filename, ALLOWED_EXTENSIONS):
         return "", 204
 
     filename = secure_filename(file.filename)
@@ -117,9 +153,8 @@ def run_test():
     html_report = generate_html_report(filename, analysis_results, url_for)
 
     # Save HTML report to a file
-    html_report_path = save_html_report(html_report, filename, RESULTS_FOLDER)
+    save_html_report(html_report, filename, RESULTS_FOLDER, 'static')
 
-    # Return no content
     return "", 204
 
 @routes.route('/preview_report/<filename>')
@@ -128,5 +163,4 @@ def preview_report(filename):
     report_path = os.path.join(RESULTS_FOLDER, filename)
     if os.path.exists(report_path):
         return send_file(report_path, as_attachment=False)
-    else:
-        return "Report not found", 404
+    return "Report not found", 404
