@@ -8,32 +8,33 @@
 </head>
 <body>
     <header>
-        <div class="container">
+        <div class="container header-grid">
             <nav aria-label="Main navigation">
-                <a href="{{ url_for('routes.index') }}" aria-label="Static Analyzer">Static Analyzer</a>
-                <a href="{{ url_for('routes.dynamic_analyzer') }}" aria-label="Dynamic Analyzer">Dynamic Analyzer</a>
+                <a href="{{ url_for('routes.index') }}" aria-label="Static Analyzer">Análisis Estático</a>
+                <a href="{{ url_for('routes.dynamic_analyzer') }}" aria-label="Dynamic Analyzer">Análisis Dinámico</a>
             </nav>
         </div>
     </header>
 
-    <main>
-        <section class="container">
+    <main class="main-grid">
+        <section class="container analyze">
             <div class="upload">
                 <form id="uploadForm" action="/run_test/masvs_resilience_ios.py" method="post" enctype="multipart/form-data">
-                    <label for="file">Elija un archivo IPA o APK para subir:</label>
                     <input type="file" id="file" name="file" accept=".ipa,.apk" hidden>
-                    <button type="button" id="uploadBtn">Analizar</button>
+                    <button type="button" id="uploadBtn"> Ejecutar Análisis Estático </button>
+                    <label for="file" class="note-label">Elija un binario IPA o APK</label>
                 </form>
             </div>
         </section>
 
-        <section class="container">
-            <h2>Reportes Estáticos Analizados</h2>
+        <section class="container reports">
+            <h2>Reportes de Análisis Estáticos</h2>
             <ul aria-live="polite">
                 {% for file in static_reports %}
                     <li><a href="{{ url_for('routes.view_report', filename='static/' ~ file) }}" target="_blank">{{ file | e }}</a></li>
                 {% endfor %}
             </ul>
+        </section>
     </main>
 
     <footer>

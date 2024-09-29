@@ -8,41 +8,42 @@
 </head>
 <body>
     <header>
-        <div class="container">
+        <div class="container header-grid">
             <nav aria-label="Main navigation">
-                <a href="{{ url_for('routes.index') }}" aria-label="Static Analyzer">Static Analyzer</a>
-                <a href="{{ url_for('routes.dynamic_analyzer') }}" aria-label="Dynamic Analyzer">Dynamic Analyzer</a>
+                <a href="{{ url_for('routes.index') }}" aria-label="Static Analyzer">Análisis Estático</a>
+                <a href="{{ url_for('routes.dynamic_analyzer') }}" aria-label="Dynamic Analyzer">Análisis Dinámico</a>
             </nav>
         </div>
     </header>
 
-    <main>
-        <section class="container">
-            <h2>Estado del Dispositivo</h2>
-            <p>
-                {% if device_connected %}
-                    Dispositivo conectado.
-                {% else %}
-                    No hay dispositivos conectados.
-                {% endif %}
-            </p>
-        </section>
+    <main class="main-grid">
 
-        <section class="container">
-            <h2>Aplicaciones Identificadas</h2>
+        <section class="container analyze">
             <form action="/run_dynamic_analysis" method="post">
-                <label for="identifier">Seleccione la aplicación:</label>
+                <button  id="AnalyzerBtn" type="submit">Ejecutar Análisis Dinámico</button>
                 <select id="identifier" name="identifier" required>
                     {% for name, identifier in apps %}
                         <option value="{{ identifier | e }}">{{ name | e }} ({{ identifier | e }})</option>
                     {% endfor %}
                 </select>
-                <button type="submit">Ejecutar Análisis Dinámico</button>
+                
+            <label class="note-label">Aplicaciones Identificadas</label>
             </form>
         </section>
         
-        <section class="container">
-            <h2>Reportes Dinámicos Analizados</h2>
+        <section class="container device-status">
+            <label>Estado del dispositivo: </label>
+            <p class="{% if device_connected %}connected{% else %}disconnected{% endif %}">
+                {% if device_connected %}
+                    Dispositivo conectado
+                {% else %}
+                    Dispositivo no conectado
+                {% endif %}
+            </p>
+        </section>
+
+        <section class="container reports">
+            <h2>Reportes de Análisis Dinámicos</h2>
             <ul aria-live="polite">
                 {% for file in dynamic_reports %}
                     <li><a href="{{ url_for('routes.view_report', filename='dynamic/' ~ file) }}" target="_blank">{{ file | e }}</a></li>
