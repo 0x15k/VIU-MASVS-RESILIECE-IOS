@@ -3,6 +3,7 @@
 body {
     font-family: 'Open Sans', sans-serif;
     margin: 0; /* Eliminar margen del body */
+    
 }
 
 .container {
@@ -42,33 +43,36 @@ html {
 
 html body h1 {
     color: #565656;
-    font-size: 28pt;
+    font-size: 24pt;
     margin: 0; /* Eliminar margen del h1 */
     width: 100%;
 }
 
 html body h2, html body h3, html body h4 {
-    font-family: 'Oswald', sans-serif;
-    color: #4d4d4d;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
     font-weight: 600;
     margin: 0; /* Eliminar margen de h2, h3, y h4 */
 }
 
 html body h2 {
-    font-size: 24pt; /* Reducir un poco el tamaño para mejorar el espaciado */
+    font-size: 20pt; /* Reducir un poco el tamaño para mejorar el espaciado */
 }
 
 html body h3 {
     font-weight: 300;
-    font-size: 25pt;
+    font-size: 16pt;
     padding: 0;
+    font-weight: bold;
 }
 
 html body h4 {
+    color: #61c754;
     font-size: 13pt;
 }
 
 p {
+    font-family: 'Roboto', sans-serif;
     margin: 0; /* Reducir el margen entre párrafos */
     line-height: 1.4; /* Ajustar la altura de línea para un espaciado más compacto */
 }
@@ -136,4 +140,105 @@ pre {
     font-size: 24px;
     font-weight: bold;
     text-align: center; /* Asegurar que el texto esté centrado */
+}
+
+.console-output {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+    white-space: pre-wrap; /* Permite que el texto se ajuste al ancho del contenedor */
+}
+
+#control {
+    font-size: 18pt;
+    color: #000000;
+    font-weight: bold; /* Asegurar que el texto en strong sea negrita */
+}
+#description {
+    font-size: 12pt;
+    color: #000000;
+    font-weight: bold; /* Asegurar que el texto en strong sea negrita */
+}
+
+.report-section {
+    border: 1px solid #ccc; /* Borde gris claro */
+    padding: 15px; /* Espaciado interno */
+    background-color: #f9f9f9; /* Fondo gris claro */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.report-frame {
+    border: 1px solid #d3d3d3; /* Borde gris claro */
+    margin: 10px;
+    padding: 15px; /* Espaciado interno */
+    background-color: #f9f9f9; /* Fondo gris muy claro */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.analysis-frame {
+    border: 1px solid #d3d3d3; /* Borde gris claro */
+    margin: 10px;
+    padding: 15px; /* Espaciado interno */
+    background-color: #e6e6e6; /* Fondo gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.console-container {
+    border: 1px solid #444; /* Borde gris oscuro */
+    border-radius: 5px; /* Bordes redondeados */
+    margin-top: 10px; /* Espaciado superior */
+    overflow: hidden; /* Ocultar desbordamiento */
+}
+
+.console-header {
+    background-color: #1e1e1e; /* Fondo gris oscuro */
+    padding: 5px 10px; /* Espaciado interno */
+    display: flex; /* Usar flexbox para alinear elementos */
+    align-items: center; /* Alinear verticalmente */
+    border-bottom: 1px solid #444; /* Borde inferior */
+}
+
+.console-header .buttons {
+    display: flex; /* Usar flexbox para alinear botones */
+    gap: 5px; /* Espaciado entre botones */
+}
+
+.console-header .button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%; /* Botones redondos */
+}
+
+.console-header .button.close {
+    background-color: #ff5f56; /* Rojo para cerrar */
+}
+
+.console-header .button.minimize {
+    background-color: #ffbd2e; /* Amarillo para minimizar */
+}
+
+.console-header .button.maximize {
+    background-color: #27c93f; /* Verde para maximizar */
+}
+
+.console-header .title {
+    flex-grow: 1; /* Tomar el espacio restante */
+    text-align: center; /* Centrar el texto */
+    color: #f8f8f2; /* Color de letra claro */
+    font-family: 'Courier New', Courier, monospace; /* Fuente de consola */
+    font-size: 14px; /* Tamaño de letra */
+}
+
+.console-output {
+    background-color: #2d2d2d; /* Fondo gris oscuro */
+    padding: 10px; /* Espaciado interno */
+    font-family: 'Courier New', Courier, monospace; /* Fuente de consola */
+    color: #f8f8f2; /* Color de letra claro */
+    white-space: pre-wrap; /* Mantener los saltos de línea */
+    border-radius: 0 0 5px 5px; /* Bordes redondeados en la parte inferior */
+    overflow-x: auto; /* Permitir desplazamiento horizontal */
 }

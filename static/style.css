@@ -101,7 +101,7 @@ select, button {
     padding: 10px; /* Reducido para menos separación */
     font-size: 0.7em; /* Ajustado a 0.7em */
     width: 100%;
-    max-width: 500px;
+    max-width: 350px;
     margin: 0 auto;
     border-radius: 5px;
     text-align: center; /* Centrar texto */
@@ -123,7 +123,7 @@ option {
     background-color: #262626;
     color: #00ff00;
     padding: 10px; /* Similar padding a button */
-    font-size: 1em; /* Ajustado a 0.7em */
+    font-size: 0.7em; /* Ajustado a 0.7em */
     border: 1px solid #00ff00;
     border-radius: 5px;
     text-align: center; /* Centrar texto */
@@ -250,8 +250,8 @@ h1::after {
     transform: scale(1.1); /* Efecto de agrandamiento al pasar el cursor */
 }
 
-/* Seleccionar el elemento con id "identifier" y aplicar estilos */
-#identifier {
+/* Seleccionar el elemento con id "identifier y script" y aplicar estilos */
+#identifier, #script {
     font-size: 1em; /* Aumentar el tamaño de la fuente */
     padding: 10px; /* Añadir padding */
     border: 2px solid #00ff00; /* Borde verde */

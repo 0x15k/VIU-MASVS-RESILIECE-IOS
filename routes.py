@@ -6,7 +6,7 @@ import subprocess
 import json
 import time
 from config import UPLOAD_FOLDER, RESULTS_FOLDER, ALLOWED_EXTENSIONS
-from utils import allowed_file, save_html_report, generate_html_report, generate_dynamic_analysis_report
+from utils import allowed_file, save_html_report, generate_html_report, generate_dynamic_analysis_report, list_scripts
 
 # Add 'resilience_tests' directory to PYTHONPATH
 sys.path.append(os.path.join(os.path.dirname(__file__), 'resilience_tests'))
@@ -54,7 +54,10 @@ def dynamic_analyzer():
     elif remote_devices:
         apps = [(process.name, process.identifier) for process in remote_devices[0].enumerate_applications() if not process.identifier.startswith("com.apple.")]
     
-    return render_template('dynamic_analyzer.html', dynamic_reports=dynamic_reports, device_connected=device_connected, apps=apps)
+    # List available scripts
+    scripts = list_scripts()
+
+    return render_template('dynamic_analyzer.html', dynamic_reports=dynamic_reports, device_connected=device_connected, apps=apps, scripts=scripts)
 
 @routes.route('/run_dynamic_analysis', methods=['POST'])
 def run_dynamic_analysis():
@@ -91,8 +94,15 @@ def run_dynamic_analysis():
         error_message += f"stderr: {e.stderr}\n"
         return error_message, 500
 
+    # Split the results into parts and take the first three
+    results_parts = dynamic_analysis_results.split('---split---')
+    if len(results_parts) < 3:
+        return "Error: Not enough results to generate the report", 500
+
+    results1, results2, results3 = results_parts[:3]
+
     # Generate HTML report
-    html_report = generate_dynamic_analysis_report(identifier, dynamic_analysis_results, url_for)
+    html_report = generate_dynamic_analysis_report(identifier, results1.splitlines(), results2.splitlines(), results3.splitlines(), url_for)
 
     # Save HTML report to a file
     html_report_path = save_html_report(html_report, identifier, RESULTS_FOLDER, 'dynamic')

@@ -21,24 +21,27 @@
         <section class="container analyze">
             <form action="/run_dynamic_analysis" method="post">
                 <button  id="AnalyzerBtn" type="submit">Ejecutar Análisis Dinámico</button>
+                
                 <select id="identifier" name="identifier" required>
                     {% for name, identifier in apps %}
                         <option value="{{ identifier | e }}">{{ name | e }} ({{ identifier | e }})</option>
                     {% endfor %}
                 </select>
-                
-            <label class="note-label">Aplicaciones Identificadas</label>
+                <label class="note-label">Selecciona la aplicación</label>
+                <!--
+                <label class="note-label">Scripts (Opcional) </label>
+                 <select id="script" name="script">
+                    {% for script in scripts %}
+                        <option value="{{ script | e }}">{{ script | e }}</option>
+                    {% endfor %}
+                </select> -->
             </form>
         </section>
         
         <section class="container device-status">
             <label>Estado del dispositivo: </label>
             <p class="{% if device_connected %}connected{% else %}disconnected{% endif %}">
-                {% if device_connected %}
-                    Dispositivo conectado
-                {% else %}
-                    Dispositivo no conectado
-                {% endif %}
+                {% if device_connected %}Dispositivo conectado{% else %}Dispositivo no conectado{% endif %}
             </p>
         </section>
 
