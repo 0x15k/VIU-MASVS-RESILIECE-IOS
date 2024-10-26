@@ -1,92 +1,121 @@
 /* Estilos generales */
-body {
+html, body {
+    height: 100%;
+    margin: 0;
     font-family: 'Courier New', Courier, monospace;
     background-color: #000000;
     color: #00ff00;
-    margin: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
 }
 
-/* Contenedor principal */
-.main-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr; /* Dos columnas, la segunda para reports */
-    gap: 20px; /* Espacio entre secciones */
-    width: 100%;
-    max-width: 1200px; /* Aumentar el ancho máximo para acomodar dos columnas */
-    padding: 20px;
-    box-sizing: border-box;
-    height: calc(100vh - 60px); /* Altura definida menos el tamaño del header y footer */
-}
-
-/* Encabezado */
+/* Header */
 header {
-    width: 100%;
-    background-color: #262626;
-    padding: 10px 0;
+    background-color: #1c1c1c;
+    padding: 1rem;
+    width: 100%; /* Asegurar que ocupe todo el ancho */
+    display: flex;
+    justify-content: center; /* Centrar el contenido */
+    align-items: center;
 }
 
 .header-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* Grid para el menú */
-    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
 }
 
 header nav {
     display: flex;
     justify-content: center;
     gap: 20px;
+    width: 100%;
 }
 
 header nav a {
     color: #00ff00;
     text-decoration: none;
     font-size: 1.2em;
-    transition: color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 header nav a:hover {
-    color: #00cc00;
+    background-color: #00ff00;
+    color: #1a1a1a;
 }
 
+/* Main Grid para el contenido */
+main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Una columna para pantallas pequeñas */
+    grid-template-rows: auto auto auto;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+/* Ajustes responsivos */
+@media (min-width: 768px) {
+    main {
+        grid-template-columns: 1fr 1fr; /* Dos columnas para pantallas medianas o más grandes */
+    }
+}
+
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+    }
+}
 /* Encabezados */
 h1, h2, h3, h4 {
     color: #ffffff;
     text-align: center;
-    /*text-shadow: 0 0 10px #00ff00;*/
-    margin: 0; /* Eliminar márgenes */
+    margin: 0;
 }
 
 h1 {
-    font-size: 2.5em; /* Tamaño para h1 */
+    font-size: 2.5em;
 }
 
 h2 {
-    font-size: 2em; /* Tamaño para h2 */
+    font-size: 2em;
 }
 
 h3 {
-    font-size: 1.75em; /* Tamaño para h3 */
+    font-size: 1.75em;
 }
 
 h4 {
-    font-size: 1.5em; /* Tamaño para h4 */
+    font-size: 1.5em;
 }
 
-/* Formulario */
+/* Formularios */
 form {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Reducido para menos separación */
+    gap: 10px;
     text-align: center;
     align-items: center;
 }
 
 label {
-    font-size: 1.5em; /* Aumentado para mejor legibilidad */
+    font-size: 1em;
     color: #00cc00;
 }
 
@@ -98,13 +127,13 @@ select, button {
     background-color: #262626;
     color: #00ff00;
     border: 1px solid #00ff00;
-    padding: 10px; /* Reducido para menos separación */
-    font-size: 0.7em; /* Ajustado a 0.7em */
+    padding: 10px;
+    font-size: 0.7em;
     width: 100%;
     max-width: 350px;
     margin: 0 auto;
     border-radius: 5px;
-    text-align: center; /* Centrar texto */
+    text-align: center;
 }
 
 button {
@@ -122,11 +151,8 @@ button:hover {
 option {
     background-color: #262626;
     color: #00ff00;
-    padding: 10px; /* Similar padding a button */
-    font-size: 0.7em; /* Ajustado a 0.7em */
-    border: 1px solid #00ff00;
-    border-radius: 5px;
-    text-align: center; /* Centrar texto */
+    padding: 10px;
+    font-size: 0.9em;
 }
 
 /* Texto preformateado */
@@ -139,7 +165,7 @@ pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     border-radius: 5px;
-    font-size: 1.1em; /* Aumentado para mejor legibilidad */
+    font-size: 1.1em;
 }
 
 /* Enlaces */
@@ -148,7 +174,7 @@ a {
     text-decoration: none;
     text-align: center;
     transition: color 0.3s;
-    font-size: 1.2em; /* Aumentado para mejor visibilidad */
+    font-size: 1.2em;
 }
 
 a:hover {
@@ -171,182 +197,260 @@ h1::after {
 
 /* Sección de reportes */
 .reports {
-    grid-column: 2; /* Asegurar que la sección de reportes esté en la segunda columna */
-    grid-row: 1 / span 2; /* Ocupar dos filas */
-    align-self: start; /* Alinear al inicio */
-    overflow-y: auto; /* Habilitar desplazamiento vertical si es necesario */
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+    overflow-y: auto;
 }
 
-/* Diseño responsivo */
-@media (max-width: 768px) {
-    .main-grid {
-        grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
-    }
-
-    h1 {
-        font-size: 2em; /* Reducir tamaño de fuente para pantallas más pequeñas */
-    }
-
-    label {
-        font-size: 1.2em; /* Reducir tamaño de fuente para pantallas más pequeñas */
-    }
-
-    select, button {
-        font-size: 1em; /* Reducir tamaño de fuente para pantallas más pequeñas */
-        padding: 8px; /* Reducir padding para pantallas más pequeñas */
-    }
-
-    pre {
-        font-size: 1em; /* Reducir tamaño de fuente para pantallas más pequeñas */
-    }
-
-    a {
-        font-size: 1em; /* Reducir tamaño de fuente para pantallas más pequeñas */
-    }
+/* Console Section */
+.console-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.5em; /* Reducir aún más tamaño de fuente para pantallas muy pequeñas */
-    }
+.console-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
 
-    label {
-        font-size: 1em; /* Reducir aún más tamaño de fuente para pantallas muy pequeñas */
-    }
+.console-form label {
+    margin-right: 10px;
+    font-weight: bold;
+    color: #ffffff;
+}
 
-    select, button {
-        font-size: 0.7em; /* Reducir aún más tamaño de fuente para pantallas muy pequeñas */
-        padding: 6px; /* Reducir aún más padding para pantallas muy pequeñas */
-        text-align: center; /* Centrar texto */
-    }
+.console-form input[type="text"] {
+    width: 400px;
+    padding: 0.5rem;
+    background-color: #2e2e2e;
+    color: #ffffff;
+    border: 1px solid #ff4757;
+    border-radius: 5px;
+}
 
-    pre {
-        font-size: 0.9em; /* Reducir aún más tamaño de fuente para pantallas muy pequeñas */
-    }
+.console-form button {
+    padding: 0.5rem 1rem;
+    background-color: #ff4757;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
 
-    a {
-        font-size: 0.9em; /* Reducir aún más tamaño de fuente para pantallas muy pequeñas */
-    }
+.console-form button:hover {
+    background-color: #ff6b81;
+}
+
+.console-output {
+    background-color: #000000;
+    color: #00ff00;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
 }
 
 /* Estilo para agrandar el botón */
 #uploadBtn, #AnalyzerBtn {
-    font-size: 1.5em; /* Aumentar el tamaño de la fuente */
-    padding: 15px 30px; /* Aumentar el padding */
-    background-color: #262626; /* Color de fondo */
-    color: #00ff00; /* Color del texto */
-    border: 2px solid #00ff00; /* Borde */
-    border-radius: 10px; /* Bordes redondeados */
-    cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
-    transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Transiciones para efectos */
-    width: 100%; /* Ancho completo */
-    max-width: 350px; /* Ancho máximo */
-    box-sizing: border-box; /* Incluir padding y borde en el ancho total */
+    font-size: 1.5em;
+    padding: 15px 30px;
+    background-color: #262626;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    width: 100%;
+    max-width: 350px;
+    box-sizing: border-box;
 }
 
 #uploadBtn:hover, #AnalyzerBtn:hover {
-    background-color: #00ff00; /* Color de fondo al pasar el cursor */
-    color: #1a1a1a; /* Color del texto al pasar el cursor */
-    transform: scale(1.1); /* Efecto de agrandamiento al pasar el cursor */
+    background-color: #00ff00;
+    color: #1a1a1a;
+    transform: scale(1.1);
 }
 
-/* Seleccionar el elemento con id "identifier y script" y aplicar estilos */
+/* Seleccionar el elemento con id "identifier y script" */
 #identifier, #script {
-    font-size: 1em; /* Aumentar el tamaño de la fuente */
-    padding: 10px; /* Añadir padding */
-    border: 2px solid #00ff00; /* Borde verde */
-    background-color: #262626; /* Color de fondo oscuro */
-    color: #00ff00; /* Color del texto verde */
-    border-radius: 5px; /* Bordes redondeados */
+    font-size: 1em;
+    padding: 10px;
+    border: 2px solid #00ff00;
+    background-color: #262626;
+    color: #00ff00;
+    border-radius: 5px;
 }
 
 /* Estilo para la etiqueta de nota */
 .note-label {
-    font-size: 0.8em; /* Tamaño de letra pequeño */
-    color: #b4b2b2; /* Color de texto gris */
-    font-style: italic; /* Texto en cursiva */
-    display: block; /* Asegurar que se comporte como un bloque */
-    margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+    font-size: 0.8em;
+    color: #b4b2b2;
+    font-style: italic;
+    display: block;
+    margin-bottom: 5px;
 }
 
-/* Estilo para centrar el contenedor y agregar espacio arriba y abajo */
+/* Estilo para centrar el contenedor y agregar espacio */
 .analyze {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 20px auto; /* Espacio arriba y abajo, centrado horizontalmente */
-    padding: 20px; /* Espacio interno */
-    max-width: 600px; /* Ancho máximo del contenedor */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para darle un poco de profundidad */
-    border-radius: 10px; /* Bordes redondeados */
-    /*background-color: #f9f9f9;  Color de fondo claro */
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
 /* Estilo para el contenedor device-status */
 .device-status {
     display: flex;
-    align-items: center; /* Alinear verticalmente al centro */
-    justify-content: center; /* Alinear horizontalmente al centro */
-    margin: 20px auto; /* Espacio arriba y abajo, centrado horizontalmente */
-    padding: 20px; /* Espacio interno */
-    max-width: 600px; /* Ancho máximo del contenedor */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para darle un poco de profundidad */
-    border-radius: 10px; /* Bordes redondeados */
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
-/* Estilo para la etiqueta y el párrafo dentro de device-status */
-.device-status label,
-.device-status p {
-    font-size: 1em; /* Tamaño de letra */
-    color: #ffffff; /* Color del texto */
-    margin: 0 10px; /* Espacio a los lados */
+.device-status label, .device-status p {
+    font-size: 1em;
+    color: #ffffff;
+    margin: 0 10px;
 }
 
-/* Estilo para el estado conectado */
 .connected {
-    color: #00ff00 !important; /* Color verde para dispositivo conectado */
+    color: #00ff00 !important;
 }
 
-/* Estilo para el estado desconectado */
 .disconnected {
-    color: red !important; /* Color rojo para dispositivo desconectado */
+    color: red !important;
 }
 
 /* Estilo para la lista desordenada (ul) */
 ul {
-    list-style-type: none; /* Eliminar los puntos de la lista */
-    padding: 0; /* Eliminar el padding por defecto */
-    margin: 0; /* Eliminar el margen por defecto */
-    background-color: #262626; /* Fondo oscuro */
-    border: 1px solid #00ff00; /* Borde verde */
-    border-radius: 5px; /* Bordes redondeados */
-    max-width: 600px; /* Ancho máximo */
-    margin: 20px auto; /* Centrar la lista horizontalmente */
-    padding: 10px; /* Añadir padding interno */
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: #262626;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
 }
 
-/* Estilo para los elementos de la lista (li) */
 ul li {
-    padding: 10px; /* Añadir padding interno */
-    border-bottom: 1px solid #00ff00; /* Línea divisoria verde */
-    color: #00ff00; /* Color del texto verde */
-    font-size: 1em; /* Tamaño de letra */
+    padding: 10px;
+    border-bottom: 1px solid #00ff00;
+    color: #00ff00;
+    font-size: 1em;
 }
 
-/* Eliminar la línea divisoria del último elemento */
 ul li:last-child {
     border-bottom: none;
 }
 
-/* Estilo para los enlaces dentro de la lista */
 ul li a {
-    color: #00ff00; /* Color del texto verde */
-    text-decoration: none; /* Eliminar subrayado */
-    transition: color 0.3s; /* Transición suave para el color */
+    color: #00ff00;
+    text-decoration: none;
+    transition: color 0.3s;
 }
 
-/* Cambiar el color del enlace al pasar el cursor */
 ul li a:hover {
-    color: #00cc00; /* Color verde más claro al pasar el cursor */
+    color: #00cc00;
+}
+
+/* Footer */
+footer {
+    background-color: #1c1c1c;
+    padding: 1rem;
+    width: 100%;
+    text-align: center;
+    color: #ffffff;
+    position: relative; /* Cambiado a 'relative' para evitar que se superponga */
+    bottom: 0;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr; /* Cambiar a una columna */
+        grid-template-rows: auto; /* Asegura que cada sección se apile verticalmente */
+    }
+
+    .reports {
+        grid-column: 1; /* Colocarlo en la primera columna para apilarlo */
+        grid-row: auto; /* Colocarlo después de las otras secciones automáticamente */
+        width: 100%;
+    }
+
+    .analyze {
+        width: 100%;
+    }
+    
+    .device-status {
+        width: 100%;
+    }
+    .console-form {
+        display: flex;
+        flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+        align-items: flex-start; /* Alinear al inicio */
+        width: 100%; /* Ocupar todo el ancho */
+    }
+
+    .console-form label, .console-form select, .console-form button {
+        width: 100%; /* Asegurar que los elementos ocupen todo el ancho */
+    }
+
+    .console-form select {
+        margin-top: 5px; /* Espacio entre el label y el select */
+    }
+
+    .console-form label{
+        font-size: 15px
+    }
+}
+
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 1200px) {
+    .main-grid {
+        grid-template-columns: 1fr; /* Cambiar a una columna para pantallas pequeñas */
+        grid-template-rows: auto; /* Ajustar filas automáticamente */
+    }
+
+    .reports {
+        grid-column: 1; /* Mantén todo en una sola columna */
+        grid-row: auto;
+        width: 100%; /* Asegurar que ocupe el ancho completo */
+    }
+    h2{
+        font-size: 1.2em;
+    }
+    .console-form {
+        flex-direction: column; /* Cambia la disposición del formulario a columna */
+        align-items: flex-start; /* Alinea al inicio */
+        width: 100%; /* Asegurar que el formulario ocupe el ancho completo */
+    }
+
+    .console-form label, .console-form select, .console-form button {
+        width: 100%; /* Asegura que los elementos ocupen todo el ancho */
+        margin-bottom: 10px; /* Añade espacio entre los elementos */
+    }
 }

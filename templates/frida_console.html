@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frida Console</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container header-grid">
+            <nav aria-label="Main navigation">
+                <a href="{{ url_for('routes.index') }}" aria-label="Static Analyzer">Análisis Estático</a>
+                <a href="{{ url_for('routes.dynamic_analyzer') }}" aria-label="Dynamic Analyzer">Análisis Dinámico</a>
+                <a href="{{ url_for('routes.frida_console') }}" aria-label="Frida Console">Consola Frida</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-grid">
+        <section class="container console-section">
+            <h2>Consola Interactiva de Frida</h2>
+            <form id="fridaForm" class="console-form">
+                <label for="identifier">Selecciona la aplicación:</label>
+                <select id="identifier" name="identifier" required>
+                    {% for name, identifier in apps %}
+                        <option value="{{ identifier | e }}">{{ name | e }} ({{ identifier | e }})</option>
+                    {% endfor %}
+                </select>
+
+                <label for="script">Selecciona el script de Frida:</label>
+                <select id="script" name="script" required>
+                    {% for script in scripts %}
+                        <option value="{{ script | e }}">{{ script | e }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Ejecutar Comando</button>
+            </form>
+        </section>
+
+        <section class="container console-section">
+            <h2>Salida de la Consola</h2>
+            <pre id="console_output" class="console-output">
+    ____ 
+   / _  |   Frida 16.5.2 - A world-class dynamic instrumentation toolkit
+  | (_| |   
+   > _  |   Commands:
+  /_/ |_|   help        -> Displays the help system
+            object?     -> Display information about 'object'
+            exit/quit   -> Exit
+            </pre>
+        </section>
+
+        <section class="container device-status">
+            <label>Estado del dispositivo: </label>
+            <p class="{% if device_connected %}connected{% else %}disconnected{% endif %}">
+                {% if device_connected %}Dispositivo conectado{% else %}Dispositivo no conectado{% endif %}
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>©2024 MASVS Resilience Test Tool v1.0 - Yamil La Barrera</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('fridaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('identifier').value;
+            const script = document.getElementById('script').value;
+
+            const outputElement = document.getElementById('console_output');
+            outputElement.textContent = '';  // Limpiar la consola
+
+            // Usar Server-Sent Events (SSE) para recibir la salida en tiempo real
+            const eventSource = new EventSource(`/run_frida?identifier=${encodeURIComponent(identifier)}&script=${encodeURIComponent(script)}`);
+            
+            eventSource.onmessage = function(event) {
+                outputElement.textContent += event.data + '\n';
+            };
+
+            eventSource.onerror = function() {
+                outputElement.textContent += "\nError ejecutando el comando";
+                eventSource.close();  // Cerrar la conexión SSE si hay un error
+            };
+        });
+    </script>
+</body>
+</html>

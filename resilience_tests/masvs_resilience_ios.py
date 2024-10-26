@@ -78,13 +78,29 @@ def test_jailbreak_and_emulator_detection(r2):
         analysis_output += "Radare2 no encontró símbolos relacionados con 'Jailbreak'.\n"
         passed += weights[1]  # Suma el peso 7 si no se encuentra Jailbreak
     
-    # Verifica cadenas relacionadas con "jail" usando iz~+jail
+    # Inicializamos una variable para verificar si no se encontró ninguna cadena
+    cadenas_encontradas = False
+
+    # Verifica cadenas relacionadas usando iz~+jailbreak
     output = r2.cmd('iz~+jailbreak')
     if "Jail" in output or "jail" in output:
-        analysis_output += f"Radare2 encontró cadenas relacionada con 'Jailbreak':\n{output}\n"
+        analysis_output += f"Radare2 encontró cadenas relacionadas con 'Jailbreak':\n{output}\n"
+        cadenas_encontradas = True  # Se encontró al menos una cadena
     else:
         analysis_output += "Radare2 no encontró cadenas relacionadas con 'Jailbreak'.\n"
-        passed += weights[2]  # Suma el peso 7 si no se encuentra Jailbreak
+
+    # Verifica cadenas relacionadas con Cydia usando iz~+cydia
+    output = r2.cmd('iz~+cydia')
+    if "Cydia" in output or "cydia" in output:
+        analysis_output += f"Radare2 encontró cadenas relacionadas con 'Cydia':\n{output}\n"
+        cadenas_encontradas = True  # Se encontró al menos una cadena
+    else:
+        analysis_output += "Radare2 no encontró cadenas relacionadas con 'Cydia'.\n"
+
+    # Si no se encontraron cadenas relacionadas ni con Jailbreak ni con Cydia, se suma el peso
+    if not cadenas_encontradas:
+        passed += weights[1]  # Suma el peso si no se encuentran cadenas
+
     
     analysis_output += "</div></div></div>"  # Cierra los divs de console-output, console-container, analysis-frame y report-frame aquí
     
