@@ -23,7 +23,7 @@ Este proyecto que utiliza MASTG y OWASP_MAS_Checklist para realizar pruebas de r
     python3 -m pip install -r requirements.txt
     ```
 
-  Para Winndows:
+  Para Windows:
 - Colocar en el PATH de sistema:
   - VIU-MASVS-RESILIECE-IOS\tools\
   - VIU-MASVS-RESILIECE-IOS\tools\radare2\bin
