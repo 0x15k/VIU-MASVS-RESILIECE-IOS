@@ -134,7 +134,8 @@ def run_dynamic_analysis():
     
     # Ejecutar el script de análisis dinámico
     try:
-        result = subprocess.run(['python', script_path, identifier], check=True, capture_output=True, text=True)
+        python_executable = 'python3' if os.system("which python3") == 0 else 'python'
+        result = subprocess.run([python_executable, script_path, identifier], check=True, capture_output=True, text=True)
         dynamic_analysis_results = result.stdout
         logger.info("Análisis dinámico ejecutado correctamente.")
     except subprocess.CalledProcessError as e:
@@ -208,7 +209,8 @@ def run_test():
     # Medir tiempo de ejecución
     start_time = time.time()
     try:
-        result = subprocess.run(['python', script_path, filename], check=True, capture_output=True, text=True)
+        python_executable = 'python3' if os.system("which python3") == 0 else 'python'
+        result = subprocess.run([python_executable, script_path, filename], check=True, capture_output=True, text=True)
         analysis_results = json.loads(result.stdout)
         logger.info("Prueba ejecutada correctamente.")
     except subprocess.CalledProcessError as e:
